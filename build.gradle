@@ -28,16 +28,17 @@ repositories {
 dependencies {
     implementation enforcedPlatform("${quarkusPlatformGroupId}:${quarkusPlatformArtifactId}:${quarkusPlatformVersion}")
     implementation 'io.quarkus:quarkus-config-yaml'
-    implementation 'io.quarkus:quarkus-hibernate-orm'
     implementation 'io.quarkus:quarkus-jdbc-h2'
-    implementation 'io.quarkus:quarkus-resteasy-jsonb'
+    implementation 'io.quarkus:quarkus-hibernate-orm'
     implementation 'io.quarkus:quarkus-hibernate-orm-panache'
     implementation 'io.quarkus:quarkus-resteasy'
-    implementation 'io.quarkus:quarkus-amazon-lambda-http'
+    implementation 'io.quarkus:quarkus-resteasy-jsonb'
     implementation 'io.quarkus:quarkus-resteasy-jackson'
     implementation 'io.quarkus:quarkus-smallrye-jwt'
     implementation 'io.quarkus:quarkus-smallrye-jwt-build'
     implementation 'io.quarkus:quarkus-elytron-security-common'
+    implementation 'io.quarkus:quarkus-amazon-lambda-http'
+    implementation 'io.quarkus:quarkus-amazon-lambda-xray'
     implementation 'io.quarkus:quarkus-arc'
     compileOnly "org.mapstruct:mapstruct:$mapStructVersion", "org.projectlombok:lombok:$lombokVersion"
     annotationProcessor "org.mapstruct:mapstruct-processor:$mapStructVersion", "org.projectlombok:lombok:$lombokVersion",

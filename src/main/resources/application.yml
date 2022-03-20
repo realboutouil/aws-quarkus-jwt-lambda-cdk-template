@@ -1,0 +1,39 @@
+DB_URL: jdbc:h2:mem:testdb
+DB_USERNAME: sa
+DB_PASSWORD: password
+DB_PLATFORM: h2
+
+quarkus:
+  application:
+    name: aws-quarkus-jwt-lambda-cdk-template
+    version: '1.0'
+  http:
+    cors: true
+    root-path: /api
+    auth:
+      proactive: false
+  datasource:
+    username: ${DB_USERNAME:test}
+    password: ${DB_PASSWORD:test}
+    db-kind: ${DB_PLATFORM:postgresql}
+    jdbc:
+      url: ${DB_URL}
+  hibernate-orm:
+    database:
+      generation: drop-and-create
+
+mp:
+  jwt:
+    expiration:
+      default: 86400
+      extended: 2678400
+      extended-timeout: false
+    verify:
+      # Public verification key
+      publickey:
+        location: publicKey.pem
+      # Private verification key
+      privatekey:
+        location: privateKey.pem
+      # Required issuer
+      issuer: https://localhost:8080

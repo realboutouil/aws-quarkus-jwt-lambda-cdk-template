@@ -12,6 +12,7 @@ import software.amazon.awscdk.services.lambda.Function;
 import software.amazon.awscdk.services.lambda.Runtime;
 import software.constructs.Construct;
 
+import java.nio.file.Path;
 import java.util.Map;
 
 public class CDKStack extends Stack {
@@ -57,7 +58,9 @@ public class CDKStack extends Stack {
     Function createFunction(String functionName, String functionHandler, Map<String, String> configuration, int memory, int maximumConcurrentExecution, int timeout) {
         return Function.Builder.create(this, functionName)
                 .runtime(Runtime.JAVA_11)
-                .code(Code.fromAsset("./../build/function.zip"))
+                .code(Code.fromAsset(String.valueOf(Path.of("./build/function.zip")
+                                .normalize().toAbsolutePath())
+                        .replace("cdk\\", "")))
                 .handler(functionHandler)
                 .memorySize(memory)
                 .functionName(functionName)

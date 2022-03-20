@@ -7,6 +7,20 @@ import software.amazon.awscdk.Tags;
 
 public class CDKApp {
 
+    public static void main(final String[] args) {
+        var app = new App();
+        var appName = "quarkus-apigateway-lambda-cdk";
+        Tags.of(app).add("project", "Secure Quarkus App on AWS Lambda");
+        Tags.of(app).add("environment", "development");
+        Tags.of(app).add("application", appName);
+
+        var stackProps = createStackProperties();
+        var httpAPIGatewayIntegration = true;
+
+        new CDKStack(app, appName, stackProps, httpAPIGatewayIntegration);
+        app.synth();
+    }
+
     static StackProps createStackProperties() {
         var account = System.getenv("CDK_DEPLOY_ACCOUNT");
         var region = System.getenv("CDK_DEPLOY_REGION");
@@ -18,19 +32,5 @@ public class CDKApp {
                 .region(region)
                 .build();
         return StackProps.builder().env(environment).build();
-    }
-
-    public static void main(final String[] args) {
-        var app = new App();
-        var appName = "quarkus-apigateway-lambda-cdk";
-        Tags.of(app).add("project", "MicroProfile with Quarkus on AWS Lambda");
-        Tags.of(app).add("environment", "development");
-        Tags.of(app).add("application", appName);
-
-        var stackProps = createStackProperties();
-        var httpAPIGatewayIntegration = true;
-
-        new CDKStack(app, appName, stackProps, httpAPIGatewayIntegration);
-        app.synth();
     }
 }

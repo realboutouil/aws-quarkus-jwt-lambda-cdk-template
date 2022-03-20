@@ -8,4 +8,5 @@ pluginManagement {
         id "${quarkusPluginId}" version "${quarkusPluginVersion}"
     }
 }
-rootProject.name = 'quarkus-lambda-demo'
+
+rootProject.name = 'aws-quarkus-jwt-lambda-cdk-template'
