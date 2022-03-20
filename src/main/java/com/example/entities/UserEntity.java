@@ -15,6 +15,7 @@ import java.util.stream.Collectors;
 
 @Getter
 @Setter
+@ToString
 @NoArgsConstructor
 @AllArgsConstructor
 @EqualsAndHashCode(callSuper = true)
@@ -44,7 +45,7 @@ public class UserEntity extends AuditableEntity {
         this.password = BcryptUtil.bcryptHash(password);
         this.firstName = first_name;
         this.lastName = last_name;
-        this.roles.add(UserRole.findByRole(role));
+        this.addRole(role);
     }
 
     public static Optional<UserEntity> findByUsername(String username) {
@@ -52,9 +53,17 @@ public class UserEntity extends AuditableEntity {
                 .singleResultOptional();
     }
 
+    public static boolean existsByUsername(String username) {
+        return UserEntity.count("lower(username)", username.toLowerCase()) > 0;
+    }
+
     public List<ERole> getGrantedRoles() {
         return this.roles.stream()
                 .map(UserRole::getRole)
                 .collect(Collectors.toList());
+    }
+
+    public void addRole(ERole role) {
+        this.roles.add(UserRole.findByRole(role));
     }
 }

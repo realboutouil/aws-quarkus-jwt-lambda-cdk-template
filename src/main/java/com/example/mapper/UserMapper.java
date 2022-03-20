@@ -4,10 +4,8 @@ import com.example.dto.UserInfo;
 import com.example.entities.ERole;
 import com.example.entities.UserEntity;
 import com.example.entities.UserRole;
-import org.mapstruct.Mapper;
-import org.mapstruct.Mapping;
-import org.mapstruct.Mappings;
-import org.mapstruct.Named;
+import com.example.model.RegisterPayload;
+import org.mapstruct.*;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -29,6 +27,13 @@ public interface UserMapper extends GenericMapper<UserInfo, UserEntity> {
     @Override
     List<UserInfo> mapToDomains(List<UserEntity> entities);
 
+
+    @Mappings({
+            @Mapping(target = "password", ignore = true),
+            @Mapping(target = "username", ignore = true),
+    })
+    void mapInputToEntity(RegisterPayload payload, @MappingTarget UserEntity entity);
+
     @Named("mapFullName")
     default String mapFullName(UserEntity entity) {
         return entity.getFirstName() + " " + entity.getLastName();
@@ -36,6 +41,8 @@ public interface UserMapper extends GenericMapper<UserInfo, UserEntity> {
 
     @Named("mapUserRoles")
     default List<ERole> mapUserRoles(List<UserRole> roles) {
-        return roles.stream().map(UserRole::getRole).collect(Collectors.toList());
+        return roles.stream()
+                .map(UserRole::getRole)
+                .collect(Collectors.toList());
     }
 }

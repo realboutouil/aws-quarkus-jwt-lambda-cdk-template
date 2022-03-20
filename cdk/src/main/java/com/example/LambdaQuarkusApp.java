@@ -5,11 +5,14 @@ import software.amazon.awscdk.Environment;
 import software.amazon.awscdk.StackProps;
 import software.amazon.awscdk.Tags;
 
-public class CDKApp {
+import java.util.Objects;
+
+public class LambdaQuarkusApp {
 
     public static void main(final String[] args) {
         var app = new App();
-        var appName = "quarkus-apigateway-lambda-cdk";
+        var appName = "aws-quarkus-jwt-lambda-cdk-template";
+
         Tags.of(app).add("project", "Secure Quarkus App on AWS Lambda");
         Tags.of(app).add("environment", "development");
         Tags.of(app).add("application", appName);
@@ -17,7 +20,7 @@ public class CDKApp {
         var stackProps = createStackProperties();
         var httpAPIGatewayIntegration = true;
 
-        new CDKStack(app, appName, stackProps, httpAPIGatewayIntegration);
+        new LambdaQuarkusStack(app, appName, stackProps, httpAPIGatewayIntegration);
         app.synth();
     }
 
@@ -25,12 +28,14 @@ public class CDKApp {
         var account = System.getenv("CDK_DEPLOY_ACCOUNT");
         var region = System.getenv("CDK_DEPLOY_REGION");
 
-        if (account == null)
+        if (Objects.isNull(account))
             return StackProps.builder().build();
         var environment = Environment.builder()
                 .account(account)
                 .region(region)
                 .build();
-        return StackProps.builder().env(environment).build();
+        return StackProps.builder()
+                .env(environment)
+                .build();
     }
 }

@@ -15,16 +15,16 @@ import software.constructs.Construct;
 import java.nio.file.Path;
 import java.util.Map;
 
-public class CDKStack extends Stack {
+public class LambdaQuarkusStack extends Stack {
 
-    static Map<String, String> configuration = Map.of("message", "hello, quarkus as AWS Lambda");
-    static String functionName = "quarkus_lambda_jwt_demo";
+    static Map<String, String> configuration = Map.of();
+    static String functionName = "quarkus_jwt_lambda_demo";
     static String lambdaHandler = "io.quarkus.amazon.lambda.runtime.QuarkusStreamHandler::handleRequest";
     static int memory = 512;
     static int maxConcurrency = 2;
     static int timeout = 10;
 
-    public CDKStack(Construct scope, String id, StackProps props, boolean httpAPIGatewayIntegration) {
+    public LambdaQuarkusStack(Construct scope, String id, StackProps props, boolean httpAPIGatewayIntegration) {
         super(scope, id, props);
 
         var function = createFunction(functionName, lambdaHandler, configuration, memory, maxConcurrency, timeout);
@@ -55,18 +55,21 @@ public class CDKStack extends Stack {
 
     }
 
-    Function createFunction(String functionName, String functionHandler, Map<String, String> configuration, int memory, int maximumConcurrentExecution, int timeout) {
+    Function createFunction(String functionName, String functionHandler,
+                            Map<String, String> configuration,
+                            int memory, int maximumConcurrentExecution, int timeout
+    ) {
         return Function.Builder.create(this, functionName)
                 .runtime(Runtime.JAVA_11)
+                .functionName(functionName)
+                .handler(functionHandler)
+                .memorySize(memory)
+                .environment(configuration)
                 .code(Code.fromAsset(String.valueOf(Path.of("./build/function.zip")
                                 .normalize().toAbsolutePath())
                         .replace("cdk\\", "")))
-                .handler(functionHandler)
-                .memorySize(memory)
-                .functionName(functionName)
-                .environment(configuration)
+//                .reservedConcurrentExecutions(maximumConcurrentExecution)
                 .timeout(Duration.seconds(timeout))
                 .build();
     }
-
 }

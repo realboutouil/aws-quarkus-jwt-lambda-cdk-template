@@ -14,10 +14,10 @@ import java.io.Serializable;
 public class RegisterPayload implements Serializable {
 
     @NotBlank
-    private String first_name;
+    private String firstName;
 
     @NotBlank
-    private String last_name;
+    private String lastName;
 
     @Email
     @NotBlank
