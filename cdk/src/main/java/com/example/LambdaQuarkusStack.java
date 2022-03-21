@@ -12,7 +12,8 @@ import software.amazon.awscdk.services.lambda.Function;
 import software.amazon.awscdk.services.lambda.Runtime;
 import software.constructs.Construct;
 
-import java.nio.file.Path;
+import java.io.File;
+import java.io.IOException;
 import java.util.Map;
 
 public class LambdaQuarkusStack extends Stack {
@@ -24,7 +25,7 @@ public class LambdaQuarkusStack extends Stack {
     static int maxConcurrency = 2;
     static int timeout = 10;
 
-    public LambdaQuarkusStack(Construct scope, String id, StackProps props, boolean httpAPIGatewayIntegration) {
+    public LambdaQuarkusStack(Construct scope, String id, StackProps props, boolean httpAPIGatewayIntegration) throws IOException {
         super(scope, id, props);
 
         var function = createFunction(functionName, lambdaHandler, configuration, memory, maxConcurrency, timeout);
@@ -58,16 +59,15 @@ public class LambdaQuarkusStack extends Stack {
     Function createFunction(String functionName, String functionHandler,
                             Map<String, String> configuration,
                             int memory, int maximumConcurrentExecution, int timeout
-    ) {
+    ) throws IOException {
         return Function.Builder.create(this, functionName)
                 .runtime(Runtime.JAVA_11)
                 .functionName(functionName)
                 .handler(functionHandler)
                 .memorySize(memory)
                 .environment(configuration)
-                .code(Code.fromAsset(String.valueOf(Path.of("./build/function.zip")
-                                .normalize().toAbsolutePath())
-                        .replace("cdk\\", "")))
+                .code(Code.fromAsset(String.valueOf(new File("./../build/function.zip")
+                        .getCanonicalFile().toPath())))
 //                .reservedConcurrentExecutions(maximumConcurrentExecution)
                 .timeout(Duration.seconds(timeout))
                 .build();

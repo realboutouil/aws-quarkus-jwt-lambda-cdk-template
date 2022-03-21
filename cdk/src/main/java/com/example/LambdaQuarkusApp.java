@@ -5,11 +5,12 @@ import software.amazon.awscdk.Environment;
 import software.amazon.awscdk.StackProps;
 import software.amazon.awscdk.Tags;
 
+import java.io.IOException;
 import java.util.Objects;
 
 public class LambdaQuarkusApp {
 
-    public static void main(final String[] args) {
+    public static void main(final String[] args) throws IOException {
         var app = new App();
         var appName = "aws-quarkus-jwt-lambda-cdk-template";
 
